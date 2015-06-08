@@ -4,6 +4,9 @@ function init(app) {
 	app.get('/', function(req, res) {
 		res.sendfile('html/index.html');
 	});
+	app.get('/home', function(req, res) {
+		res.sendfile('html/index.html');
+	});
 	app.post('/_search', function (req, res) {
 		console.log('routed to _search...');
 		esService.executePost(res, '_search', req.body);
