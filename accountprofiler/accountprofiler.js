@@ -9,6 +9,7 @@ function start() {
 		console.log('Account Profiler running on port 3000...');
 		
 		app.use(bodyParser.json());
+		app.use(express.static('static'));
 		routes.init(app);
 	});
 }
