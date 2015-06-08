@@ -9,7 +9,10 @@
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link href="/css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/docsupport/style.css">
+    <link rel="stylesheet" href="/css/docsupport/prism.css">
+    <link rel="stylesheet" href="/css/chosen.min.css">
+    <link rel="stylesheet" href="/css/main.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,8 +28,15 @@
           <h1>Search Accounts</h1>
           <form>
             <div class="form-group">
-              <label for="account-query">Search Query</label>
-              <input type="text" name="query" id="account-query" value="" placeholder="Enter your search query..." /> 
+              <label for="account-query">Account or Company Name</label>
+              <input type="text" name="account-query" id="account-query" value="" />
+              <!-- Chosen Select
+              <select class="form-control" name="query" id="account-query" value="" data-placeholder="Search accounts...">
+                <option value="">Option 1</option>
+                <option value="">Option 2</option>
+                <option value="">Option 3</option>
+              </select>
+              -->
             </div>
           </form>
         </div>
@@ -36,6 +46,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/chosen.jquery.min.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+    <script src="/js/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/main.js"></script>
   </body>
 </html>
