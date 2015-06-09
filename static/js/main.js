@@ -12,7 +12,7 @@ $(document).ready(function(){
   })();
   function init(){
     var params = getUrlVars();
-    if (params.length > 0 && params.ai && !isNaN(params.ai)){
+    if (params.length > 0 && params.pg && params.pg == "account-details"){
       initDetails();
     }
     else{
@@ -83,11 +83,11 @@ $(document).ready(function(){
     if (!send_in_progress){
       var data_sent = {};
       if (params && params.aq){
-        data_sent.aq = decodeURIComponent(params.aq);
+        data_sent.aq = decodeURIComponent(params.aq).toLowerCase();
+        data_sent.em = true;
       }
       $.ajax({
-        url: "/2085772195/_search",
-        // url: "/2085772195/contact/_search",
+        url: "/2085772195/account/_search",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(data_sent),
@@ -311,10 +311,10 @@ $(document).ready(function(){
         html += '</th>';
         html += '</tr>';
         for (var i = 0; i < data.hits.hits.length; i++){
-          html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
+          html += '<tr class="account-id" id="account-'+data.hits.hits[i]._source.c_company+'">';
           html += '<td>';
           html += '<div class="row">';
-          html += '<a href="/?aq='+encodeURIComponent(data.hits.hits[i]._id)+'">';
+          html += '<a href="/?pg=account-details&aq='+encodeURIComponent(data.hits.hits[i]._source.c_company)+'">';
           html += '<div class="col-md-2">';
           html += data.hits.hits[i]._id;
           html += '</div>';
@@ -357,10 +357,10 @@ $(document).ready(function(){
     }
 
   function getSearchAccounts(){
-    if ($('#account-query').val().length > 2){
+    if ($('#account-query').val().length > 2 || $('#account-query').val().length == 0){
       if (!send_in_progress){
         var data_sent = {
-          aq: $('#account-query').val()
+          aq: $('#account-query').val().toLowerCase()
         };
         $.ajax({
           url: "/2085772195/_search",
