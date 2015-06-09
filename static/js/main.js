@@ -1,6 +1,15 @@
 $(document).ready(function(){
 
+  // helps send only one XHR request at a time
   var send_in_progress = false;
+  // helps delay the XHR request if user is still typing
+  var delay = (function(){
+    var timer = 0;
+    return function(callback, ms){
+      clearTimeout (timer);
+      timer = setTimeout(callback, ms);
+    };
+  })();
   function init(){
     var params = getUrlVars();
     if (params.length > 0 && params.ai && !isNaN(params.ai)){
@@ -73,11 +82,12 @@ $(document).ready(function(){
     var params = getUrlVars();
     if (!send_in_progress){
       var data_sent = {};
-      if (params && params.ai){
-        data_sent.ai = params.ai
+      if (params && params.aq){
+        data_sent.aq = decodeURIComponent(params.aq);
       }
       $.ajax({
-        url: "/2085772195/contact/_search",
+        url: "/2085772195/_search",
+        // url: "/2085772195/contact/_search",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(data_sent),
@@ -240,7 +250,9 @@ $(document).ready(function(){
       return false;
     });
     $('#account-query').on('keyup', function(){
-      getSearchAccounts();
+      delay(function(){
+        getSearchAccounts();
+      }, 500);
     });
   }
 
@@ -253,9 +265,13 @@ $(document).ready(function(){
         dataType: "json",
         beforeSend: function(jqXHR){
           send_in_progress = true;
+          $('#loading').show();
+          $('#results-table').hide();
         },
         complete: function(jqXHR){
           send_in_progress = false;
+          $('#loading').hide();
+          $('#results-table').show();
         },
         success: function(data, textStatus, jqXHR){
           var tables = genAccountTables(data);
@@ -267,6 +283,7 @@ $(document).ready(function(){
 
   function genAccountTables(data){
       var html = '';
+      console.log(data);
       if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
         html += '<table class="table table-striped table-hover">';
         html += '<tr>';
@@ -297,7 +314,7 @@ $(document).ready(function(){
           html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
           html += '<td>';
           html += '<div class="row">';
-          html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
+          html += '<a href="/?aq='+encodeURIComponent(data.hits.hits[i]._id)+'">';
           html += '<div class="col-md-2">';
           html += data.hits.hits[i]._id;
           html += '</div>';
@@ -353,9 +370,13 @@ $(document).ready(function(){
           dataType: "json",
           beforeSend: function(jqXHR){
             send_in_progress = true;
+            $('#loading').show();
+            $('#results-table').hide();
           },
           complete: function(jqXHR){
             send_in_progress = false;
+            $('#loading').hide();
+            $('#results-table').show();
           },
           success: function(data, textStatus, jqXHR){
             var tables = genAccountTables(data);
