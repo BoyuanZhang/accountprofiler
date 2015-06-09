@@ -4,10 +4,10 @@ var esService = require('./services/esservice'),
 
 function init(app) {
 	app.get('/', function(req, res) {
-		res.sendfile(root + '/static/html/index.html');
+		res.sendFile(root + '/static/html/index.html');
 	});
 	app.get('/home', function(req, res) {
-		res.sendfile(root + 'static/html/index.html');
+		res.sendFile(root + 'static/html/index.html');
 	});
 	app.post('/_search', function (req, res) {
 		console.log('routed to _search...');
