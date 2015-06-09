@@ -6,30 +6,34 @@ client = new elasticsearch.Client({
   log: 'trace'
 });
 
-function _buildQuery(req) {
-	if(req.params.type === 'contact') {
-		return 'c_company:' + req.body.aq;
-	}
-}
-
-//for details: use req.body.ai for contact endpoint....
-
 function search(req, res) {
+	var _query = { match_all: {} };
+	
+	if(req.body.aq) {
+		_query = {term: {'c_company': req.body.aq}};
+	}
+
 	client.search({
   		index: Index,
-  		q: _buildQuery(req)
+  		 body: {
+    		query: _query
+    	}
 	}, function (error, response) {
   		if(error) {
   			console.log(error);	
   		}
   		if(response) {
-  			console.log(response);
+  			console.log('aq: ' + req.body.aq);
+  			//console.log(response);
+  			if(response.hits)
+  			console.log('total matches: ' + response.hits.total);
   			res.write(JSON.stringify(response));
-  			res.end();	
+  			res.end();
   		}  		
 	});
 }
 
+ //size: 11, query: { bool: { must: [ {term: { searchTerm }}] }}
 function fetch(req, res) {
 	console.log(req.body);
 
@@ -41,7 +45,7 @@ function fetch(req, res) {
   			console.log(error);	
   		}
   		if(response) {
-  			console.log(response);
+  			console.log('total matches: ' + response.hits.total);
   			res.write(JSON.stringify(response));
   			res.end();
   		}  		
