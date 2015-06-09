@@ -1,11 +1,13 @@
-var esService = require('./services/esservice');
+var esService = require('./services/esservice'),
+	path = require('path'),
+	root = path.dirname(require.main.filename);
 
 function init(app) {
 	app.get('/', function(req, res) {
-		res.sendfile('static/html/index.html');
+		res.sendfile(root + '/static/html/index.html');
 	});
 	app.get('/home', function(req, res) {
-		res.sendfile('static/html/index.html');
+		res.sendfile(root + 'static/html/index.html');
 	});
 	app.post('/_search', function (req, res) {
 		console.log('routed to _search...');
