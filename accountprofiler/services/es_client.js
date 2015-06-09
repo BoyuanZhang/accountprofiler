@@ -6,11 +6,38 @@ client = new elasticsearch.Client({
   log: 'trace'
 });
 
+function createFetchQuery(req) {
+   var criteria = {
+    match: {
+      c_company: {
+        query: req.body.aq,
+        operator: 'and'
+      }
+    }
+   };
+   return criteria;
+}
+
+function createSimpleQuery(req){
+  var blah = req.body.aq;
+  return {
+      simple_query_string : {
+        fields: ['c_company'],
+        query: req.body.aq,
+        analyzer: 'snowball',
+        flags: 'AND|PHRASE|PRECEDENCE'
+      }
+  };
+}
+
 function search(req, res) {
 	var _query = { match_all: {} };
 	
 	if(req.body.aq) {
-		_query = {term: {'c_company': req.body.aq}};
+    if(req.body.em) {
+      _query = createFetchQuery(req);
+    }
+    _query = createSimpleQuery(req);
 	}
 
 	client.search({
@@ -24,9 +51,9 @@ function search(req, res) {
   		}
   		if(response) {
   			console.log('aq: ' + req.body.aq);
-  			//console.log(response);
-  			if(response.hits)
-  			console.log('total matches: ' + response.hits.total);
+  			if(response.hits) {
+          console.log('total matches: ' + response.hits.total);
+        }
   			res.write(JSON.stringify(response));
   			res.end();
   		}  		
