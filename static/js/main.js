@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+  var send_in_progress = false;
   function init(){
     var params = getUrlVars();
     if (params.length > 0 && params.ai && !isNaN(params.ai)){
@@ -13,7 +14,9 @@ $(document).ready(function(){
 
   function initDetails(){
     $('h3').before('<a class="btn btn-default" id="return-home" href="/">Return to Search Accounts</a>');
-    $('h3').html('Account Details');
+    var title_string = 'Account Details:';
+    $('h3').html(title_string);
+    $('title').html(title_string);
     $('#dynamic-content').html("");
     getAccountDetails();
   }
@@ -26,6 +29,28 @@ $(document).ready(function(){
       max = Math.floor(Math.random() * 10);
     }
     return randomnumber = min + Math.floor(Math.random() * max)
+  }
+
+  function getRevenueNumber(max){
+    var revenue = 0;
+    if (typeof(max) == "undefined" || isNaN(max)){
+      max = 100;
+    }
+    revenue = getRandomNumber(max,1);
+    var choose = getRandomNumber(3);
+    if (choose == 0){
+      choose = 1;
+    }
+    var revenue_marker = 'M';
+    switch(choose){
+      case 1:
+        revenue_marker = 'M';
+        break;
+      case 2:
+        revenue_marker = 'B';
+        break;
+    }
+    return revenue + revenue_marker;
   }
 
   function getFakePhoneNumber(){
@@ -52,129 +77,161 @@ $(document).ready(function(){
       // ai = Account ID
       query_string += "ai=" + params.ai;
     }
-    $.ajax({
-      url: "/2085772195/contact/_search" + query_string,
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      success: function(data, textStatus, jqXHR){
-        console.log(data);
-        var html = '';
-        if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
-          html += '<div class="row">';
-          html += '<div class="col-md-4">';
-          html += '&nbsp;';
-          html += '</div>';
-          html += '<div class="col-md-4">';
-          html += '<div id="company-card">';
-          html += '<h4>Company: ' + data.hits.hits[0]._source.c_company + '</h4>';
-          $('h3').html('Account Details: ' + data.hits.hits[0]._source.c_company);
-          html += '<div>';
-          html += 'Annual Revenue: $';
-          if (data.hits.hits[0]._source.c_company_revenue1 != ""){
-            html += data.hits.hits[0]._source.c_company_revenue1;
-          }
-          else{
-            html += accounting.formatNumber(getRandomNumber(100000000, 10000));
-          }
-          html += '</div>';
-          html += '<div>';
-          html += 'Company Size: ';
-          if (data.hits.hits[0]._source.c_company_size1 != ""){
-            html += data.hits.hits[0]._source.c_company_size1;
-          }
-          else{
-            html += accounting.formatNumber(getRandomNumber(50000, 1000));
-          }
-          html += '</div>';
-          html += '</div>';
-          html += '</div>';
-          html += '<div class="col-md-4">';
-          html += '&nbsp;';
-          html += '</div>';
-          html += '</div>';
-          html += '<h4>Top Contacts</h4>';
-          html += '<table class="table table-striped table-hover">';
-          html += '<tr>';
-          html += '<th>';
-          html += '<div class="row">';
-          html += '<div class="col-md-2">';
-          html += 'Contact Name';
-          html += '</div>';
-          html += '<div class="col-md-2">';
-          html += 'Recent Events';
-          html += '</div>';
-          html += '<div class="col-md-2">';
-          html += 'Lead Score';
-          html += '</div>';
-          html += '<div class="col-md-2">';
-          html += 'Office Number';
-          html += '</div>';
-          html += '<div class="col-md-2">';
-          html += 'Mobile Number';
-          html += '</div>';
-          html += '<div class="col-md-2">';
-          html += 'Email Address';
-          html += '</div>';
-          html += '</div>';
-          html += '</th>';
-          html += '</tr>';
-          for (var i = 0; i < data.hits.hits.length; i++){
-            html += '<tr>';
-            html += '<td>';
+    if (!send_in_progress){
+      $.ajax({
+        url: "/2085772195/contact/_search" + query_string,
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        beforeSend: function(jqXHR){
+          send_in_progress = true;
+        },
+        complete: function(jqXHR){
+          send_in_progress = false;
+        },
+        success: function(data, textStatus, jqXHR){
+          var html = '';
+          if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
             html += '<div class="row">';
-            html += '<div class="col-md-2">';
-            html += data.hits.hits[i]._source.c_firstname;
-            if (data.hits.hits[i]._source.c_firstname != "" && data.hits.hits[i]._source.c_lastname != ""){
-              html += ' ';
-            }
-            if (data.hits.hits[i]._source.c_lastname != ""){
-              html += data.hits.hits[i]._source.c_lastname;
-            }
+            html += '<div class="col-md-4">';
+            html += '&nbsp;';
             html += '</div>';
-            html += '<div class="col-md-2">';
-            var send_numbers = getRandomNumber(30);
-            html += 'Send Email: ' + send_numbers + '<br />';
-            var open_numbers = getRandomNumber(send_numbers);
-            html += 'Open Email: ' + open_numbers + '<br />';
-            html += 'Click Link: ' + getRandomNumber(open_numbers);
+            html += '<div class="col-md-4">';
+            html += '<div id="company-card">';
+            html += '<div>'; // parent holder
+            html += '<img src="../images/ci-business.png" class="left" id="card-image" alt="company card" />';
+            html += '<div class="left" id="company-name">';
+            html += '<h4 class="text-capitalize">' + data.hits.hits[0]._source.c_company + '</h4>';
+            var title_string = 'Account Details: ' + data.hits.hits[0]._source.c_company;
+            $('h3').html('<span class="text-capitalize">' + title_string + '</span>');
+            $('title').html(title_string);
+            html += 'Los Angeles, California';
             html += '</div>';
-            html += '<div class="col-md-2">';
-            if (data.hits.hits[i]._source.c_lead_score == ""){
-              html += getRandomNumber(80);
+            html += '<div class="clr"></div>';
+            html += '</div>'; // end parent holder
+            html += '<div>';
+            html += 'Annual Revenue: $';
+            if (data.hits.hits[0]._source.c_company_revenue1 != ""){
+              html += data.hits.hits[0]._source.c_company_revenue1;
             }
             else{
-              html += data.hits.hits[i]._source.c_lead_score;
+              html += getRevenueNumber();
             }
             html += '</div>';
+            html += '<div>';
+            html += 'Company Size: ';
+            if (data.hits.hits[0]._source.c_company_size1 != ""){
+              html += data.hits.hits[0]._source.c_company_size1;
+            }
+            else{
+              html += accounting.formatNumber(getRandomNumber(50000, 1000));
+            }
+            html += '</div>';
+            html += '<div>';
+            html += 'Total Contacts: ';
+            html += getRandomNumber(30,11);
+            html += '</div>';
+            html += '<div>';
+            html += 'Industry: ';
+            html += 'Tech';
+            html += '</div>';
+            html += '<div>';
+            html += 'Specialties: ';
+            html += 'Artificial Intelligence';
+            html += '</div>';
+            html += '<div>';
+            html += 'Website: ';
+            html += '<a href="http://www.oracle.com/" target="_blank">http://www.oracle.com/</a>';
+            html += '</div>';
+            html += '</div>'; // end company-card
+            html += '</div>'; // end col-md-4
+            html += '<div class="col-md-4">';
+            html += '&nbsp;';
+            html += '</div>';
+            html += '</div>'; // end row
+            html += '<h4>Top Contacts</h4>';
+            html += '<table class="table table-striped table-hover">';
+            html += '<tr>';
+            html += '<th>';
+            html += '<div class="row">';
             html += '<div class="col-md-2">';
-            html += getFakePhoneNumber();
-            //html += data.hits.hits[i]._source.c_busphone;
+            html += 'Contact Name';
             html += '</div>';
             html += '<div class="col-md-2">';
-            html += getFakePhoneNumber();
-            // html += data.hits.hits[i]._source.c_mobilephone;
+            html += 'Recent Events';
             html += '</div>';
             html += '<div class="col-md-2">';
-            html += '<a class="email-link" href="mailto:'+data.hits.hits[i]._source.c_emailaddress+'">';
-            html += data.hits.hits[i]._source.c_emailaddress;
-            html += '</a>';
+            html += 'Lead Score';
+            html += '</div>';
+            html += '<div class="col-md-2">';
+            html += 'Office Number';
+            html += '</div>';
+            html += '<div class="col-md-2">';
+            html += 'Mobile Number';
+            html += '</div>';
+            html += '<div class="col-md-2">';
+            html += 'Email Address';
             html += '</div>';
             html += '</div>';
-            html += '</td>';
+            html += '</th>';
             html += '</tr>';
+            for (var i = 0; i < data.hits.hits.length; i++){
+              html += '<tr>';
+              html += '<td>';
+              html += '<div class="row">';
+              html += '<div class="col-md-2 text-capitalize">';
+              html += data.hits.hits[i]._source.c_firstname;
+              if (data.hits.hits[i]._source.c_firstname != "" && data.hits.hits[i]._source.c_lastname != ""){
+                html += ' ';
+              }
+              if (data.hits.hits[i]._source.c_lastname != ""){
+                html += data.hits.hits[i]._source.c_lastname;
+              }
+              html += '</div>';
+              html += '<div class="col-md-2">';
+              var send_numbers = getRandomNumber(30);
+              html += 'Send Email: ' + send_numbers + '<br />';
+              var open_numbers = getRandomNumber(send_numbers);
+              html += 'Open Email: ' + open_numbers + '<br />';
+              html += 'Click Link: ' + getRandomNumber(open_numbers);
+              html += '</div>';
+              html += '<div class="col-md-2">';
+              if (data.hits.hits[i]._source.c_lead_score == ""){
+                html += getRandomNumber(80);
+              }
+              else{
+                html += data.hits.hits[i]._source.c_lead_score;
+              }
+              html += '</div>';
+              html += '<div class="col-md-2">';
+              html += getFakePhoneNumber();
+              //html += data.hits.hits[i]._source.c_busphone;
+              html += '</div>';
+              html += '<div class="col-md-2">';
+              html += getFakePhoneNumber();
+              // html += data.hits.hits[i]._source.c_mobilephone;
+              html += '</div>';
+              html += '<div class="col-md-2">';
+              html += '<a class="email-link" href="mailto:'+data.hits.hits[i]._source.c_emailaddress+'">';
+              html += data.hits.hits[i]._source.c_emailaddress;
+              html += '</a>';
+              html += '</div>';
+              html += '</div>';
+              html += '</td>';
+              html += '</tr>';
+            }
+            html += '</table>';
           }
-          html += '</table>';
+          else{
+            html += 'Sorry, this account has no contacts.';
+          }
+          $('#dynamic-content').html(html);
+        },
+        error: function(){
+          console.log('error');
         }
-        else{
-          html += 'Sorry, this account has no contacts.';
-        }
-        $('#dynamic-content').html(html);
-      },
-      error: function(){
-        console.log('error');
-      }
-    });
+      });
+    }
   }
 
   function initQuery(){
@@ -193,54 +250,96 @@ $(document).ready(function(){
       query_string += "?";
       // aq = Account Query
       query_string += "aq=" + $('#account-query').val();
-      $.ajax({
-        url: "/2085772195/contact/_search" + query_string,
-        type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        success: function(data, textStatus, jqXHR){
-          var html = '';
-          if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
-            html += '<table class="table table-striped table-hover">';
-            html += '<tr>';
-            html += '<th>';
-            html += '<div class="row">';
-            html += '<div class="col-md-6">';
-            html += 'Account ID';
-            html += '</div>';
-            html += '<div class="col-md-6">';
-            html += 'Account Name';
-            html += '</div>';
-            html += '</div>';
-            html += '</th>';
-            html += '</tr>';
-            for (var i = 0; i < data.hits.hits.length; i++){
-              html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
-              html += '<td>';
+      if (!send_in_progress){
+        $.ajax({
+          url: "/2085772195/contact/_search" + query_string,
+          type: "POST",
+          contentType: "application/json",
+          dataType: "json",
+          beforeSend: function(jqXHR){
+            send_in_progress = true;
+          },
+          complete: function(jqXHR){
+            send_in_progress = false;
+          },
+          success: function(data, textStatus, jqXHR){
+            var html = '';
+            if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
+              html += '<table class="table table-striped table-hover">';
+              html += '<tr>';
+              html += '<th>';
               html += '<div class="row">';
-              html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
-              html += '<div class="col-md-6">';
-              html += data.hits.hits[i]._id;
+              html += '<div class="col-md-2">';
+              html += 'Account ID';
               html += '</div>';
-              html += '<div class="col-md-6">';
-              html += data.hits.hits[i]._source.c_company;
+              html += '<div class="col-md-2">';
+              html += 'Account Name';
               html += '</div>';
-              html += '</a>';
+              html += '<div class="col-md-2 text-center">';
+              html += 'Annual Revenue';
               html += '</div>';
-              html += '</td>';
+              html += '<div class="col-md-2 text-center">';
+              html += 'Company Size';
+              html += '</div>';
+              html += '<div class="col-md-2 text-center">';
+              html += 'Number of Contacts';
+              html += '</div>';
+              html += '<div class="col-md-2 text-center">';
+              html += 'Total Events';
+              html += '</div>';
+              html += '</div>';
+              html += '</th>';
               html += '</tr>';
+              for (var i = 0; i < data.hits.hits.length; i++){
+                html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
+                html += '<td>';
+                html += '<div class="row">';
+                html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
+                html += '<div class="col-md-2">';
+                html += data.hits.hits[i]._id;
+                html += '</div>';
+                html += '<div class="col-md-2">';
+                html += data.hits.hits[i]._source.c_company;
+                html += '</div>';
+                html += '<div class="col-md-2 text-center">$';
+                if (data.hits.hits[0]._source.c_company_revenue1 != ""){
+                  html += data.hits.hits[0]._source.c_company_revenue1;
+                }
+                else{
+                  html += getRevenueNumber();
+                }
+                html += '</div>';
+                html += '<div class="col-md-2 text-center">';
+                if (data.hits.hits[0]._source.c_company_size1 != ""){
+                  html += data.hits.hits[0]._source.c_company_size1;
+                }
+                else{
+                  html += accounting.formatNumber(getRandomNumber(50000, 1000));
+                }
+                html += '</div>';
+                html += '<div class="col-md-2 text-center">';
+                html += getRandomNumber(10,3);
+                html += '</div>';
+                html += '<div class="col-md-2 text-center">';
+                html += getRandomNumber(100,20);
+                html += '</div>';
+                html += '</a>';
+                html += '</div>';
+                html += '</td>';
+                html += '</tr>';
+              }
+              html += '</table>';
             }
-            html += '</table>';
+            else{
+              html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
+            }
+            $('#results-table').html(html);
+          },
+          error: function(){
+            console.log('error');
           }
-          else{
-            html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
-          }
-          $('#results-table').html(html);
-        },
-        error: function(){
-          console.log('error');
-        }
-      });
+        });
+      }
     }
   }
 

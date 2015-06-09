@@ -15,3 +15,19 @@ h3{
 #return-home{
   margin-bottom:15px;
 }
+.left{
+  float: left;
+}
+.clr{
+  clear: both;
+}
+#card-image{
+  width: 60px;
+  margin: 0 20px 20px 0;
+}
+#company-name{
+  width: 400px;
+}
+#company-card h4{
+  margin-bottom: 5px;
+}
