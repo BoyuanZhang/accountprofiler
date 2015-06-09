@@ -281,10 +281,12 @@ $(document).ready(function(){
     }
   }
 
-  function genAccountTables(data){
+  function genAccountTables(data, aq){
       var html = '';
-      console.log(data);
       if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
+        if (typeof(aq) !== "undefined" && aq != ""){
+          html += '<h5>Results for: ' + aq.replace(/\{\}/ig, '') + '</h5>';
+        }
         html += '<table class="table table-striped table-hover">';
         html += '<tr>';
         html += '<th>';
@@ -359,8 +361,9 @@ $(document).ready(function(){
   function getSearchAccounts(){
     if ($('#account-query').val().length > 2 || $('#account-query').val().length == 0){
       if (!send_in_progress){
+        var aq = $('#account-query').val().toLowerCase();
         var data_sent = {
-          aq: $('#account-query').val().toLowerCase()
+          aq: aq
         };
         $.ajax({
           url: "/2085772195/_search",
@@ -379,7 +382,7 @@ $(document).ready(function(){
             $('#results-table').show();
           },
           success: function(data, textStatus, jqXHR){
-            var tables = genAccountTables(data);
+            var tables = genAccountTables(data, aq);
             $('#results-table').html(tables);
           },
           error: function(){
