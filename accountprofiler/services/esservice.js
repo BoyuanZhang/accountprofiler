@@ -6,7 +6,7 @@ function executePost( response, endpoint, body) {
 	
 	var serializedBody = JSON.stringify(body);
 	var options = createOptions('POST', endpoint, serializedBody);
-	
+	console.log(serializedBody);
 	var result = '';
 	
 	var httpReq = http.request(options, function(httpRes) {
