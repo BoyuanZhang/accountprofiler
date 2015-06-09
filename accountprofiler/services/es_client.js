@@ -34,7 +34,7 @@ function search(req, res) {
 	var _query = { match_all: {} };
 	
 	if(req.body.aq) {
-    if(req.body.em) {
+    if(typeof(req.body.em) !== "undefined") {
       _query = createFetchQuery(req);
     }
     _query = createSimpleQuery(req);
@@ -60,24 +60,4 @@ function search(req, res) {
 	});
 }
 
- //size: 11, query: { bool: { must: [ {term: { searchTerm }}] }}
-function fetch(req, res) {
-	console.log(req.body);
-
-	client.search({
-  		index: Index,
-  		q: '_id:' + req.body.ai 
-	}, function (error, response) {
-  		if(error) {
-  			console.log(error);	
-  		}
-  		if(response) {
-  			console.log('total matches: ' + response.hits.total);
-  			res.write(JSON.stringify(response));
-  			res.end();
-  		}  		
-	});
-}
-
 exports.search = search;
-exports.fetch = fetch;
