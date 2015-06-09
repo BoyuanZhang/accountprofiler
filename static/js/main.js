@@ -189,8 +189,11 @@ $(document).ready(function(){
 
   function getAccounts(){
     if ($('#account-query').val().length > 2){
+      var query_string = "";
+      query_string += "?";
+      query_string += "aq=" + $('#account-query').val();
       $.ajax({
-        url: "/2085772195/contact/_search",
+        url: "/2085772195/contact/_search" + query_string,
         type: "POST",
         contentType: "application/json",
         dataType: "json",
