@@ -132,9 +132,11 @@ $(document).ready(function(){
             }
             html += '</div>';
             html += '<div class="col-md-2">';
-            html += 'Send Email: ' + getRandomNumber(30) + '<br />';
-            html += 'Open Email: ' + getRandomNumber(30) + '<br />';
-            html += 'Click Link: ' + getRandomNumber(30);
+            send_numbers = getRandomNumber(30);
+            html += 'Send Email: ' + send_numbers + '<br />';
+            open_numbers = getRandomNumber(send_numbers);
+            html += 'Open Email: ' + open_numbers + '<br />';
+            html += 'Click Link: ' + getRandomNumber(open_numbers);
             html += '</div>';
             html += '<div class="col-md-2">';
             if (data.hits.hits[i]._source.c_lead_score == ""){
@@ -175,58 +177,67 @@ $(document).ready(function(){
   }
 
   function initQuery(){
-    $('#account-query').on('keyup', function(){
-      if ($('#account-query').val().length > 2){
-        $.ajax({
-          url: "/2085772195/contact/_search",
-          type: "POST",
-          contentType: "application/json",
-          dataType: "json",
-          success: function(data, textStatus, jqXHR){
-            var html = '';
-            if (data.hits.hits.length > 0){
-              html += '<table class="table table-striped table-hover">';
-              html += '<tr>';
-              html += '<th>';
-              html += '<div class="row">';
-              html += '<div class="col-md-6">';
-              html += 'Account ID';
-              html += '</div>';
-              html += '<div class="col-md-6">';
-              html += 'Account Name';
-              html += '</div>';
-              html += '</div>';
-              html += '</th>';
-              html += '</tr>';
-              for (var i = 0; i < data.hits.hits.length; i++){
-                html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
-                html += '<td>';
-                html += '<div class="row">';
-                html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
-                html += '<div class="col-md-6">';
-                html += data.hits.hits[i]._id;
-                html += '</div>';
-                html += '<div class="col-md-6">';
-                html += data.hits.hits[i]._source.c_company;
-                html += '</div>';
-                html += '</a>';
-                html += '</div>';
-                html += '</td>';
-                html += '</tr>';
-              }
-              html += '</table>';
-            }
-            else{
-              html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
-            }
-            $('#results-table').html(html);
-          },
-          error: function(){
-            console.log('error');
-          }
-        });
-      }
+    $('#account-query-form').on('submit', function(){
+      getAccounts();
+      return false;
     });
+    $('#account-query').on('keyup', function(){
+      console.log('tester');
+      getAccounts();
+    });
+  }
+
+  function getAccounts(){
+    if ($('#account-query').val().length > 2){
+      $.ajax({
+        url: "/2085772195/contact/_search",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data, textStatus, jqXHR){
+          var html = '';
+          if (data.hits.hits.length > 0){
+            html += '<table class="table table-striped table-hover">';
+            html += '<tr>';
+            html += '<th>';
+            html += '<div class="row">';
+            html += '<div class="col-md-6">';
+            html += 'Account ID';
+            html += '</div>';
+            html += '<div class="col-md-6">';
+            html += 'Account Name';
+            html += '</div>';
+            html += '</div>';
+            html += '</th>';
+            html += '</tr>';
+            for (var i = 0; i < data.hits.hits.length; i++){
+              html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
+              html += '<td>';
+              html += '<div class="row">';
+              html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
+              html += '<div class="col-md-6">';
+              html += data.hits.hits[i]._id;
+              html += '</div>';
+              html += '<div class="col-md-6">';
+              html += data.hits.hits[i]._source.c_company;
+              html += '</div>';
+              html += '</a>';
+              html += '</div>';
+              html += '</td>';
+              html += '</tr>';
+            }
+            html += '</table>';
+          }
+          else{
+            html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
+          }
+          $('#results-table').html(html);
+        },
+        error: function(){
+          console.log('error');
+        }
+      });
+    }
   }
 
   // Read a page's GET URL variables and return them as an associative array.
