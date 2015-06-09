@@ -182,7 +182,6 @@ $(document).ready(function(){
       return false;
     });
     $('#account-query').on('keyup', function(){
-      console.log('tester');
       getAccounts();
     });
   }
