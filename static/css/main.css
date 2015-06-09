@@ -1,0 +1,17 @@
+table td a, .email-link{
+  display: block;
+}
+#main-content{
+  padding: 15px 0 0 0;
+}
+h3{
+  margin-top: 0px;
+}
+#company-card{
+  padding: 20px;
+  border: solid 1px #ddd;
+  min-height: 250px;
+}
+#return-home{
+  margin-bottom:15px;
+}
