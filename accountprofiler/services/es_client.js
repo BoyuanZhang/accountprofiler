@@ -36,8 +36,10 @@ function search(req, res) {
 	if(req.body.aq) {
     if(typeof(req.body.em) !== "undefined") {
       _query = createFetchQuery(req);
-    }
-    _query = createSimpleQuery(req);
+    } 
+    else {
+      _query = createSimpleQuery(req);
+    }    
 	}
 
 	client.search({
