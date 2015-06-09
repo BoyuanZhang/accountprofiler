@@ -71,17 +71,16 @@ $(document).ready(function(){
 
   function getAccountDetails(){
     var params = getUrlVars();
-    var query_string = "";
-    if (params && params.ai){
-      query_string += "?";
-      // ai = Account ID
-      query_string += "ai=" + params.ai;
-    }
     if (!send_in_progress){
+      var data_sent = {};
+      if (params && params.ai){
+        data_sent.ai = params.ai
+      }
       $.ajax({
-        url: "/2085772195/contact/_search" + query_string,
+        url: "/2085772195/contact/_search",
         type: "POST",
         contentType: "application/json",
+        data: JSON.stringify(data_sent),
         dataType: "json",
         beforeSend: function(jqXHR){
           send_in_progress = true;
@@ -235,26 +234,122 @@ $(document).ready(function(){
   }
 
   function initQuery(){
+    getAccounts();
     $('#account-query-form').on('submit', function(){
-      getAccounts();
+      getSearchAccounts();
       return false;
     });
     $('#account-query').on('keyup', function(){
-      getAccounts();
+      getSearchAccounts();
     });
   }
 
   function getAccounts(){
+    if (!send_in_progress){
+      $.ajax({
+        url: "/2085772195/_search",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        beforeSend: function(jqXHR){
+          send_in_progress = true;
+        },
+        complete: function(jqXHR){
+          send_in_progress = false;
+        },
+        success: function(data, textStatus, jqXHR){
+          var tables = genAccountTables(data);
+          $('#results-table').html(tables);
+        }
+      });
+    }
+  }
+
+  function genAccountTables(data){
+      var html = '';
+      if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
+        html += '<table class="table table-striped table-hover">';
+        html += '<tr>';
+        html += '<th>';
+        html += '<div class="row">';
+        html += '<div class="col-md-2">';
+        html += 'Account ID';
+        html += '</div>';
+        html += '<div class="col-md-2">';
+        html += 'Account Name';
+        html += '</div>';
+        html += '<div class="col-md-2 text-center">';
+        html += 'Annual Revenue';
+        html += '</div>';
+        html += '<div class="col-md-2 text-center">';
+        html += 'Company Size';
+        html += '</div>';
+        html += '<div class="col-md-2 text-center">';
+        html += 'Number of Contacts';
+        html += '</div>';
+        html += '<div class="col-md-2 text-center">';
+        html += 'Total Events';
+        html += '</div>';
+        html += '</div>';
+        html += '</th>';
+        html += '</tr>';
+        for (var i = 0; i < data.hits.hits.length; i++){
+          html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
+          html += '<td>';
+          html += '<div class="row">';
+          html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
+          html += '<div class="col-md-2">';
+          html += data.hits.hits[i]._id;
+          html += '</div>';
+          html += '<div class="col-md-2">';
+          html += data.hits.hits[i]._source.c_company;
+          html += '</div>';
+          html += '<div class="col-md-2 text-center">$';
+          if (data.hits.hits[0]._source.c_company_revenue1 != ""){
+            html += data.hits.hits[0]._source.c_company_revenue1;
+          }
+          else{
+            html += getRevenueNumber();
+          }
+          html += '</div>';
+          html += '<div class="col-md-2 text-center">';
+          if (data.hits.hits[0]._source.c_company_size1 != ""){
+            html += data.hits.hits[0]._source.c_company_size1;
+          }
+          else{
+            html += accounting.formatNumber(getRandomNumber(50000, 1000));
+          }
+          html += '</div>';
+          html += '<div class="col-md-2 text-center">';
+          html += getRandomNumber(10,3);
+          html += '</div>';
+          html += '<div class="col-md-2 text-center">';
+          html += getRandomNumber(100,20);
+          html += '</div>';
+          html += '</a>';
+          html += '</div>';
+          html += '</td>';
+          html += '</tr>';
+        }
+        html += '</table>';
+      }
+      else{
+        html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
+      }
+      return html;
+    }
+
+  function getSearchAccounts(){
     if ($('#account-query').val().length > 2){
-      var query_string = "";
-      query_string += "?";
-      // aq = Account Query
-      query_string += "aq=" + $('#account-query').val();
       if (!send_in_progress){
+        var data_sent = {
+          aq: $('#account-query').val()
+        };
         $.ajax({
-          url: "/2085772195/contact/_search" + query_string,
+          url: "/2085772195/_search",
           type: "POST",
           contentType: "application/json",
+          data: JSON.stringify(data_sent),
           dataType: "json",
           beforeSend: function(jqXHR){
             send_in_progress = true;
@@ -263,77 +358,8 @@ $(document).ready(function(){
             send_in_progress = false;
           },
           success: function(data, textStatus, jqXHR){
-            var html = '';
-            if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
-              html += '<table class="table table-striped table-hover">';
-              html += '<tr>';
-              html += '<th>';
-              html += '<div class="row">';
-              html += '<div class="col-md-2">';
-              html += 'Account ID';
-              html += '</div>';
-              html += '<div class="col-md-2">';
-              html += 'Account Name';
-              html += '</div>';
-              html += '<div class="col-md-2 text-center">';
-              html += 'Annual Revenue';
-              html += '</div>';
-              html += '<div class="col-md-2 text-center">';
-              html += 'Company Size';
-              html += '</div>';
-              html += '<div class="col-md-2 text-center">';
-              html += 'Number of Contacts';
-              html += '</div>';
-              html += '<div class="col-md-2 text-center">';
-              html += 'Total Events';
-              html += '</div>';
-              html += '</div>';
-              html += '</th>';
-              html += '</tr>';
-              for (var i = 0; i < data.hits.hits.length; i++){
-                html += '<tr class="account-id" id="account-'+data.hits.hits[i]._id+'">';
-                html += '<td>';
-                html += '<div class="row">';
-                html += '<a href="/?ai='+data.hits.hits[i]._id+'">';
-                html += '<div class="col-md-2">';
-                html += data.hits.hits[i]._id;
-                html += '</div>';
-                html += '<div class="col-md-2">';
-                html += data.hits.hits[i]._source.c_company;
-                html += '</div>';
-                html += '<div class="col-md-2 text-center">$';
-                if (data.hits.hits[0]._source.c_company_revenue1 != ""){
-                  html += data.hits.hits[0]._source.c_company_revenue1;
-                }
-                else{
-                  html += getRevenueNumber();
-                }
-                html += '</div>';
-                html += '<div class="col-md-2 text-center">';
-                if (data.hits.hits[0]._source.c_company_size1 != ""){
-                  html += data.hits.hits[0]._source.c_company_size1;
-                }
-                else{
-                  html += accounting.formatNumber(getRandomNumber(50000, 1000));
-                }
-                html += '</div>';
-                html += '<div class="col-md-2 text-center">';
-                html += getRandomNumber(10,3);
-                html += '</div>';
-                html += '<div class="col-md-2 text-center">';
-                html += getRandomNumber(100,20);
-                html += '</div>';
-                html += '</a>';
-                html += '</div>';
-                html += '</td>';
-                html += '</tr>';
-              }
-              html += '</table>';
-            }
-            else{
-              html += 'Sorry, no accounts match your search criteria. Please update your search criteria.';
-            }
-            $('#results-table').html(html);
+            var tables = genAccountTables(data);
+            $('#results-table').html(tables);
           },
           error: function(){
             console.log('error');
