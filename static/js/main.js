@@ -283,10 +283,9 @@ $(document).ready(function(){
 
   function genAccountTables(data, aq){
       var html = '';
-      console.log(data);
       if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
         if (typeof(aq) !== "undefined" && aq != ""){
-          html += '<h5>Results for: ' + aq + '</h5>';
+          html += '<h5>Results for: ' + aq.replace(/\{\}/ig, '') + '</h5>';
         }
         html += '<table class="table table-striped table-hover">';
         html += '<tr>';
