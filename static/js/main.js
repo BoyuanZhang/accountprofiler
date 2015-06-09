@@ -49,6 +49,7 @@ $(document).ready(function(){
     var query_string = "";
     if (params && params.ai){
       query_string += "?";
+      // ai = Account ID
       query_string += "ai=" + params.ai;
     }
     $.ajax({
@@ -59,7 +60,7 @@ $(document).ready(function(){
       success: function(data, textStatus, jqXHR){
         console.log(data);
         var html = '';
-        if (data.hits.hits.length > 0){
+        if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
           html += '<div class="row">';
           html += '<div class="col-md-4">';
           html += '&nbsp;';
@@ -132,9 +133,9 @@ $(document).ready(function(){
             }
             html += '</div>';
             html += '<div class="col-md-2">';
-            send_numbers = getRandomNumber(30);
+            var send_numbers = getRandomNumber(30);
             html += 'Send Email: ' + send_numbers + '<br />';
-            open_numbers = getRandomNumber(send_numbers);
+            var open_numbers = getRandomNumber(send_numbers);
             html += 'Open Email: ' + open_numbers + '<br />';
             html += 'Click Link: ' + getRandomNumber(open_numbers);
             html += '</div>';
@@ -190,6 +191,7 @@ $(document).ready(function(){
     if ($('#account-query').val().length > 2){
       var query_string = "";
       query_string += "?";
+      // aq = Account Query
       query_string += "aq=" + $('#account-query').val();
       $.ajax({
         url: "/2085772195/contact/_search" + query_string,
@@ -198,7 +200,7 @@ $(document).ready(function(){
         dataType: "json",
         success: function(data, textStatus, jqXHR){
           var html = '';
-          if (data.hits.hits.length > 0){
+          if (data && data.hits && data.hits.hits && data.hits.hits.length > 0){
             html += '<table class="table table-striped table-hover">';
             html += '<tr>';
             html += '<th>';
