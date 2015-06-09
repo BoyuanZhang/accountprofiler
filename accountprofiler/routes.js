@@ -17,13 +17,11 @@ function init(app) {
 	app.post('/:index/_search', function(req,res) {
 		console.log('reqBody' + req.body);
 		esClient.search(req, res);
-		//esService.executePost(res, req.params.index + '/_search', req.body);
 	});
 	app.post('/:index/:type/_search', function(req, res) {
 		console.log('routed to :index/:type/_search...');
 		console.log('reqBody' + req.body);
-		esClient.fetch(req, res);
-		//esService.executePost(res, req.params.index + '/' + req.params.type + '/_search', req.body);
+		esClient.search(req, res);
 	});
 }
 
