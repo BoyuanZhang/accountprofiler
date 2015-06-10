@@ -37,3 +37,10 @@ h3{
 #company-card h4{
   margin-bottom: 5px;
 }
+#loading {
+  display: none;
+  height: 500px;
+}
+.fa-5 {
+  font-size: 9em;
+}

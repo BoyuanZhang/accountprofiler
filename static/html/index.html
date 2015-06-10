@@ -8,7 +8,8 @@
     <title>Account Search</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/main.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,6 +31,17 @@
                   <input type="text" class="form-control" name="account-query" id="account-query" value="" autofocus />
                 </div>
               </form>
+              <div class="row" id="loading">
+                <div class="col-md-4">
+                &nbsp;
+                </div>
+                <div class="col-md-4 text-center">
+                  <i class="fa fa-spinner fa-5 fa-spin"></i>
+                </div>
+                <div class="col-md-4">
+                &nbsp;
+                </div>
+              </div>
               <div id="results-table">
 
               </div>
@@ -39,10 +51,10 @@
       </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
     <script src="../js/accounting.min.js"></script>
     <script src="../js/main.js"></script>
   </body>
