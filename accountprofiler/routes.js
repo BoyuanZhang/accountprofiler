@@ -7,7 +7,10 @@ function init(app) {
 		res.sendFile(root + '/static/html/index.html');
 	});
 	app.get('/home', function(req, res) {
-		res.sendFile(root + 'static/html/index.html');
+		res.sendFile(root + '/static/html/index.html');
+	});
+	app.get('/feed', function(req, res) {
+		res.sendFile(root + '/static/html/feed.html');
 	});
 	app.post('/_search', function (req, res) {
 		console.log('routed to _search...');
