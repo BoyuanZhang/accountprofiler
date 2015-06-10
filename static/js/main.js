@@ -87,7 +87,7 @@ $(document).ready(function(){
         data_sent.em = true;
       }
       $.ajax({
-        url: "/3085772195/account/_search",
+        url: "/4444085772195/account/_search",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(data_sent),
@@ -259,7 +259,7 @@ $(document).ready(function(){
   function getAccounts(){
     if (!send_in_progress){
       $.ajax({
-        url: "/3085772195/_search",
+        url: "/4444085772195/_search",
         type: "POST",
         contentType: "application/json",
         dataType: "json",
@@ -291,13 +291,10 @@ $(document).ready(function(){
         html += '<tr>';
         html += '<th>';
         html += '<div class="row">';
-        html += '<div class="col-md-2">';
-        html += 'Account ID';
-        html += '</div>';
-        html += '<div class="col-md-2">';
+        html += '<div class="col-md-3">';
         html += 'Account Name';
         html += '</div>';
-        html += '<div class="col-md-2 text-center">';
+        html += '<div class="col-md-3 text-center">';
         html += 'Annual Revenue';
         html += '</div>';
         html += '<div class="col-md-2 text-center">';
@@ -317,13 +314,10 @@ $(document).ready(function(){
           html += '<td>';
           html += '<div class="row">';
           html += '<a href="/?pg=account-details&aq='+encodeURIComponent(data.hits.hits[i]._source.c_company)+'">';
-          html += '<div class="col-md-2">';
-          html += data.hits.hits[i]._id;
-          html += '</div>';
-          html += '<div class="col-md-2">';
+          html += '<div class="col-md-3">';
           html += data.hits.hits[i]._source.c_company;
           html += '</div>';
-          html += '<div class="col-md-2 text-center">$';
+          html += '<div class="col-md-3 text-center">$';
           if (data.hits.hits[0]._source.c_company_revenue1 != ""){
             html += data.hits.hits[0]._source.c_company_revenue1;
           }
@@ -366,7 +360,7 @@ $(document).ready(function(){
           aq: aq
         };
         $.ajax({
-          url: "/3085772195/_search",
+          url: "/4444085772195/_search",
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify(data_sent),

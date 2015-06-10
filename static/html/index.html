@@ -26,9 +26,79 @@
             <h3>Search Accounts</h3>
             <div id="dynamic-content">
               <form id="account-query-form">
-                <div class="form-group">
+                <div class="form-group" id="search-query">
                   <label for="account-query">Account or Company Name</label>
                   <input type="text" class="form-control" name="account-query" id="account-query" value="" autofocus />
+                </div>
+                <div class="row" id="account-controls">
+                  <div class="col-md-12 text-right">
+                    <div class="form-inline">
+                      <div class="form-group">
+                        <label for="sort-by">Sort By:</label>
+                        <select name="sort_by" id="sort-by" class="form-control">
+                          <option value="" selected disabled>Choose Sort Option</option>
+                          <option value="account-name">Account Name</option>
+                          <option value="annual-revenue">Annual Revenue</option>
+                          <option value="company-size">Company Size</option>
+                          <option value="contacts-number">Number of Contacts</option>
+                          <option value="event-count">Event Count</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <!--<div class="dropdown">
+                          <button class="btn btn-default dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-expanded="true">
+                            Sort By:
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="sort-by">
+                            <li role="presentation">
+                          </ul>
+                        </div>-->
+                        <select name="sort_dir" id="sort-direction" class="form-control">
+                          <option value="" selected disabled>Choose Sort Direction</option>
+                          <option value="asc">Ascending</option>
+                          <option value="desc">Descending</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" id="filter-by-holder">
+                  <div class="col-md-12 text-right">
+                    <div id="add-filter-buttons">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                    </div>
+                    <div id="add-filter-options">
+                      <div class="form-inline">
+                        <div class="form-group">
+                          <label for="filter-by">Filter By:</label>
+                          <select name="filter_by" id="filter-by" class="form-control">
+                            <option value="" selected disabled>Choose Filter Option</option>
+                            <option value="account-name">Account Name</option>
+                            <option value="annual-revenue">Annual Revenue</option>
+                            <option value="company-size">Company Size</option>
+                            <option value="contacts-number">Number of Contacts</option>
+                            <option value="event-count">Event Count</option>
+                            <option value="event-type">Event Type</option>
+                            <option value="contact-role">Contact Role</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="filter_by_eql" id="filter-by-eql" class="form-control">
+                            <option value="" selected disabled>Choose Equality Operator</option>
+                            <option value="account-name">Equals</option>
+                            <option value="annual-revenue">Does Not Equal</option>
+                            <option value="company-size">Greater Than</option>
+                            <option value="contacts-number">Less Than</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" name="filter_by_eql_input" id="filter-by-eql-input" value="" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </form>
               <div class="row" id="loading">
