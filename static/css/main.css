@@ -1,6 +1,9 @@
 table td a, .email-link{
   display: block;
 }
+#feed-container{
+	background-color:white;
+}
 #main-content{
   padding: 15px 0 0 0;
 }
@@ -15,7 +18,10 @@ h3{
 #return-home{
   margin-bottom:15px;
 }
-.left{
+
+.activity-click-icon{
+	margin-right:20px;
+}.left{
   float: left;
 }
 .clr{
