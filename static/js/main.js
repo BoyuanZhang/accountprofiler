@@ -10,6 +10,14 @@ $(document).ready(function(){
       timer = setTimeout(callback, ms);
     };
   })();
+
+  $(function () {
+    console.log('tooltip running');
+    $(document).on('DOMSubTreeModified', function(){
+      $('.total-events').tooltip();
+    });
+  });
+
   function init(){
     var params = getUrlVars();
     if (params.length > 0 && params.pg && params.pg == "account-details"){
@@ -254,6 +262,12 @@ $(document).ready(function(){
         getSearchAccounts();
       }, 500);
     });
+    $('#add-filter').on('click', function(){
+      $('#filter-by-target').append($('#add-filter-options').html());
+    });
+    $('#remove-filter').on('click', function(){
+      $('#filter-by-target .filter-by-holder:last-child').remove();
+    });
   }
 
   function getAccounts(){
@@ -336,7 +350,7 @@ $(document).ready(function(){
           html += '<div class="col-md-2 text-center">';
           html += getRandomNumber(10,3);
           html += '</div>';
-          html += '<div class="col-md-2 text-center">';
+          html += '<div class="col-md-2 text-center total-events" data-toggle="tooltip" data-placement="top" title="Events Listed Here">';
           html += getRandomNumber(100,20);
           html += '</div>';
           html += '</a>';

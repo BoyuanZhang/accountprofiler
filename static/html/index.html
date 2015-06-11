@@ -30,9 +30,9 @@
                   <label for="account-query">Account or Company Name</label>
                   <input type="text" class="form-control" name="account-query" id="account-query" value="" autofocus />
                 </div>
-                <div class="row" id="account-controls">
+                <div class="row">
                   <div class="col-md-12 text-right">
-                    <div class="form-inline">
+                    <div class="form-inline" id="account-controls">
                       <div class="form-group">
                         <label for="sort-by">Sort By:</label>
                         <select name="sort_by" id="sort-by" class="form-control">
@@ -63,13 +63,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="row" id="filter-by-holder">
-                  <div class="col-md-12 text-right">
-                    <div id="add-filter-buttons">
-                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                    </div>
-                    <div id="add-filter-options">
+                <div class="row">
+                  <div class="col-md-12 text-right" id="add-filter-options">
+                    <div class="filter-by-holder">
                       <div class="form-inline">
                         <div class="form-group">
                           <label for="filter-by">Filter By:</label>
@@ -97,6 +93,19 @@
                           <input type="text" class="form-control" name="filter_by_eql_input" id="filter-by-eql-input" value="" />
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-right" id="filter-by-target">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-right">
+                    <div class="filter-by-holder" id="add-filter-buttons">
+                      <label>Add Filter By:</label>
+                      <span class="glyphicon glyphicon-plus" id="add-filter" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-minus" id="remove-filter" aria-hidden="true"></span>
                     </div>
                   </div>
                 </div>
